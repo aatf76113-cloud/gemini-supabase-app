@@ -1,0 +1,52 @@
+{
+  "name": "Zain Automation - منصة أتمتة مسارات العمل الذكية",
+  "short_name": "ZainAuto",
+  "description": "منصة أتمتة مسارات العمل والذكاء الاصطناعي المؤسسية - Zain Automation Platform",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#4f46e5",
+  "dir": "rtl",
+  "lang": "ar",
+  "categories": ["productivity", "utilities", "business"],
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/maskable-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "أنشئ مسار عمل جديد",
+      "short_name": "مسار جديد",
+      "description": "افتح منشئ مسارات العمل بالذكاء الاصطناعي",
+      "url": "/?tab=canvas",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    },
+    {
+      "name": "لوحة التحكم",
+      "short_name": "الرئيسية",
+      "description": "استعراض الإحصائيات والتنبيهات",
+      "url": "/?tab=dashboard",
+      "icons": [{ "src": "/icons/icon-192x192.png", "sizes": "192x192" }]
+    }
+  ],
+  "prefer_related_applications": false,
+  "related_applications": []
+}

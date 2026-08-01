@@ -1,0 +1,169 @@
+{
+  "collections": {
+    "users": {
+      "schema": {
+        "uid": "string",
+        "email": "string",
+        "displayName": "string",
+        "photoURL": "string?",
+        "role": "string",
+        "language": "string",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null && request.auth.uid == resource.data.uid"
+    },
+    "workspaces": {
+      "schema": {
+        "name": "string",
+        "slug": "string",
+        "ownerId": "string",
+        "plan": "string",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "workspace_members": {
+      "schema": {
+        "workspaceId": "string",
+        "userId": "string?",
+        "email": "string",
+        "role": "string",
+        "status": "string",
+        "invitedBy": "string",
+        "joinedAt": "timestamp?",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "invitations": {
+      "schema": {
+        "workspaceId": "string",
+        "workspaceName": "string",
+        "email": "string",
+        "role": "string",
+        "status": "string",
+        "invitedBy": "string",
+        "invitedByEmail": "string",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "audit_logs": {
+      "schema": {
+        "workspaceId": "string",
+        "userId": "string",
+        "userName": "string",
+        "userEmail": "string",
+        "action": "string",
+        "details": "string",
+        "metadata": "object?",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "workflows": {
+      "schema": {
+        "workspaceId": "string?",
+        "name": "string",
+        "description": "string?",
+        "trigger": "object",
+        "steps": "array",
+        "active": "boolean",
+        "executionsCount": "number",
+        "successCount": "number",
+        "lastRunAt": "timestamp?",
+        "createdBy": "string",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "executions": {
+      "schema": {
+        "workspaceId": "string?",
+        "workflowId": "string",
+        "workflowName": "string",
+        "status": "string",
+        "durationMs": "number",
+        "triggeredBy": "string",
+        "stepsLog": "array",
+        "error": "string?",
+        "executedAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "connections": {
+      "schema": {
+        "userId": "string",
+        "service": "string",
+        "connectionType": "string",
+        "accessToken": "string?",
+        "refreshToken": "string?",
+        "apiKey": "string?",
+        "expiresAt": "string?",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp",
+        "status": "string",
+        "customName": "string?",
+        "isFavorite": "boolean?",
+        "category": "string?",
+        "details": "string?",
+        "healthScore": "number?"
+      },
+      "rules": "request.auth != null"
+    },
+    "workspace_trials": {
+      "schema": {
+        "workspaceId": "string",
+        "userId": "string",
+        "userEmail": "string",
+        "referralCode": "string",
+        "referredByCode": "string?",
+        "startDate": "timestamp",
+        "trialDaysLimit": "number",
+        "trialDaysBonus": "number",
+        "totalTrialDays": "number",
+        "tokensLimit": "number",
+        "tokensUsed": "number",
+        "workflowsLimit": "number",
+        "workflowsCount": "number",
+        "aiAgentsLimit": "number",
+        "aiAgentsCount": "number",
+        "connectionsLimit": "number",
+        "connectionsCount": "number",
+        "status": "string",
+        "notificationsSent": "object",
+        "createdAt": "timestamp",
+        "updatedAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "referrals": {
+      "schema": {
+        "inviterUserId": "string",
+        "inviterEmail": "string",
+        "inviterReferralCode": "string",
+        "invitedUserId": "string",
+        "invitedUserEmail": "string",
+        "invitedWorkspaceId": "string?",
+        "bonusDaysGranted": "number",
+        "status": "string",
+        "abuseFlagReason": "string?",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    },
+    "trial_extensions": {
+      "schema": {
+        "workspaceId": "string",
+        "userEmail": "string",
+        "daysAdded": "number",
+        "reason": "string",
+        "grantedBy": "string",
+        "createdAt": "timestamp"
+      },
+      "rules": "request.auth != null"
+    }
+  }
+}
