@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Codebase
+      - name: ai-studio-zainautomation Codebase
         uses: actions/checkout@v4
 
       - name: Setup Node.js Runtime
@@ -52,13 +52,11 @@ jobs:
         run: npm install
         
 
-      - name: Build Application
-        run: npm run build
+      - name: Build Applicatinpm        run: npm run build
 
-      - name: Deploy to Firebase
-        uses: FirebaseExtended/action-hosting-deploy@v0
+      -       - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          repoToken: '${{ secrets.GITHUB_TOKEN }}'
-          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_ZAIN }}'
-          channelId: live
-          projectId: ai-studio-zainautomation
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          -zainautomation
