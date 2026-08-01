@@ -1,0 +1,7 @@
+{
+  "version": "2.4.0-prod",
+  "buildTimestamp": 1785514080000,
+  "buildDate": "2026-07-31T08:00:00Z",
+  "releaseNotes": "Zain Automation Production RC 2.4 - Full PWA & Multi-cloud Connection Hub",
+  "minSupportedVersion": "2.0.0"
+}

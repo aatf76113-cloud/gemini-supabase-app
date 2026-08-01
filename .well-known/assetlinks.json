@@ -1,0 +1,12 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "io.zainauto.app",
+      "sha256_cert_fingerprints": [
+        "14:6D:E9:83:C5:73:06:50:D8:EE:B9:9A:DF:B1:20:66:36:23:4B:91:CD:88:51:B2:76:A8:10:EC:92:DF:D6:70"
+      ]
+    }
+  }
+]
