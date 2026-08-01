@@ -1,44 +1,12 @@
-name: Zain Automation Production CI/CD Pipeline
+name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [ main, production ]
-  pull_request:
     branches: [ main ]
 
 jobs:
-  build-and-test:
-    name: Build, Lint & Security Audit
+  build-and-deploy:
     runs-on: ubuntu-latest
-
-    steps:
-      - name: ai-studio-zainautomation Codebase
-        uses: actions/checkout@v4
-
-      - name: Setup Node.js Runtime
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: 'npm'
-
-      - name: Install Dependencies
-        run: npm install
-
-
-      - name: Run Type Check & Linter
-        run: npm run lint
-
-      - name: Build Production Distribution
-        run: npm run build
-        env:
-          NODE_ENV: production
-
-  deploy-firebase:
-    name: Deploy to Firebase Hosting & Cloud Rules
-    needs: build-and-test
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-
     steps:
       - name: Checkout Codebase
         uses: actions/checkout@v4
@@ -50,13 +18,12 @@ jobs:
 
       - name: Install Dependencies
         run: npm install
-        
 
-      - name: Build Applicatinpm        run: npm run build
+      - name: Build Application
+        run: npm run build
 
-      -       - name: Deploy to GitHub Pages
+      - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./dist
-          -zainautomation
