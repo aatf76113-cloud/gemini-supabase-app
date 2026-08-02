@@ -4,7 +4,8 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 export default defineConfig(() => {
-  return {
+  base: '/gemini-supabase-app/',
+
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
