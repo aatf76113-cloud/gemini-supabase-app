@@ -447,10 +447,20 @@ export default function App() {
           }}
         />
       ) : (
-        <div className="flex-1 flex h-[calc(100vh-4rem)] overflow-hidden">
-          {/* Sidebar */}
-          <div className={`fixed inset-y-16 right-0 z-40 transform transition-transform duration-200 md:relative md:translate-x-0 ${
-            isMobileSidebarOpen ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
+        <div className="flex-1 flex h-[calc(100vh-4rem)] overflow-hidden relative">
+          {/* Mobile Sidebar Backdrop Overlay */}
+          {isMobileSidebarOpen && (
+            <div
+              className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden transition-opacity"
+              onClick={() => setIsMobileSidebarOpen(false)}
+            />
+          )}
+
+          {/* Sidebar Drawer */}
+          <div className={`fixed inset-y-16 rtl:right-0 ltr:left-0 z-40 transform transition-transform duration-300 md:relative md:inset-auto md:translate-x-0 ${
+            isMobileSidebarOpen 
+              ? 'translate-x-0' 
+              : language === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0'
           }`}>
             <Sidebar
               activeTab={activeTab}

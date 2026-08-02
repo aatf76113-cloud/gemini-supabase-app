@@ -443,8 +443,8 @@ export const WorkflowCanvasInner: React.FC<WorkflowCanvasProps> = ({
       )}
 
       {/* Top Builder Control Header */}
-      <div className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between shrink-0 z-20">
-        <div className="flex items-center space-x-4 space-x-reverse min-w-0">
+      <div className="bg-white border-b border-slate-200 px-4 py-3 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0 z-20">
+        <div className="flex items-center space-x-3 space-x-reverse min-w-0">
           <button
             onClick={onBack}
             className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors shrink-0"
@@ -453,7 +453,7 @@ export const WorkflowCanvasInner: React.FC<WorkflowCanvasProps> = ({
             {isRtl ? <ArrowRight className="w-5 h-5" /> : <ArrowLeft className="w-5 h-5" />}
           </button>
 
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <input
               type="text"
               value={isRtl ? workflow.nameAr : workflow.name}
@@ -467,20 +467,20 @@ export const WorkflowCanvasInner: React.FC<WorkflowCanvasProps> = ({
         </div>
 
         {/* Action Buttons: Run, Save, Publish */}
-        <div className="flex items-center space-x-2.5 space-x-reverse shrink-0">
+        <div className="flex items-center space-x-2 space-x-reverse overflow-x-auto pb-1 sm:pb-0 shrink-0">
           {/* Status Badge */}
           <button
             onClick={() => setWorkflow({ ...workflow, active: !workflow.active })}
-            className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 space-x-reverse transition-all ${
+            className={`px-3 py-1.5 rounded-xl font-bold text-xs flex items-center space-x-1.5 space-x-reverse transition-all shrink-0 ${
               workflow.active ? 'bg-emerald-100 text-emerald-800 border border-emerald-200' : 'bg-slate-100 text-slate-600'
             }`}
           >
             <Power className="w-3.5 h-3.5" />
-            <span>{workflow.active ? (isRtl ? 'منشور (Live)' : 'Live') : (isRtl ? 'مسودة' : 'Draft')}</span>
+            <span className="hidden sm:inline">{workflow.active ? (isRtl ? 'منشور (Live)' : 'Live') : (isRtl ? 'مسودة' : 'Draft')}</span>
           </button>
 
           {/* Quick Toolbar */}
-          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1">
+          <div className="flex items-center bg-slate-100 p-1 rounded-xl border border-slate-200 gap-1 shrink-0">
             <button
               onClick={handleCopyNode}
               disabled={!selectedNodeId}
@@ -511,28 +511,28 @@ export const WorkflowCanvasInner: React.FC<WorkflowCanvasProps> = ({
           <button
             onClick={handleRunExecution}
             disabled={isRunning}
-            className="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-300 font-extrabold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-2 space-x-reverse border border-slate-800"
+            className="px-3 sm:px-4 py-2 bg-slate-900 hover:bg-slate-800 text-amber-300 font-extrabold text-xs rounded-xl shadow-sm transition-all flex items-center space-x-1.5 space-x-reverse border border-slate-800 shrink-0"
           >
             <Play className="w-3.5 h-3.5 fill-amber-300" />
-            <span>{isRunning ? (isRtl ? 'جاري التشغيل...' : 'Running...') : (isRtl ? 'تشغيل (Run)' : 'Run')}</span>
+            <span>{isRunning ? (isRtl ? 'جاري...' : 'Running...') : (isRtl ? 'تشغيل' : 'Run')}</span>
           </button>
 
           {/* Save Button */}
           <button
             onClick={handleSaveToFirestore}
-            className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-indigo-100 transition-all flex items-center space-x-2 space-x-reverse"
+            className="px-3 sm:px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-indigo-100 transition-all flex items-center space-x-1.5 space-x-reverse shrink-0"
           >
             <Save className="w-3.5 h-3.5" />
-            <span>{isRtl ? 'حفظ (Save)' : 'Save'}</span>
+            <span>{isRtl ? 'حفظ' : 'Save'}</span>
           </button>
 
           {/* Publish Button */}
           <button
             onClick={handlePublishWorkflow}
-            className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-100 transition-all flex items-center space-x-2 space-x-reverse"
+            className="px-3 sm:px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-extrabold text-xs rounded-xl shadow-md shadow-emerald-100 transition-all flex items-center space-x-1.5 space-x-reverse shrink-0"
           >
             <Radio className="w-3.5 h-3.5 animate-pulse" />
-            <span>{isRtl ? 'نشر (Publish)' : 'Publish'}</span>
+            <span>{isRtl ? 'نشر' : 'Publish'}</span>
           </button>
         </div>
       </div>
@@ -540,7 +540,7 @@ export const WorkflowCanvasInner: React.FC<WorkflowCanvasProps> = ({
       {/* Main Split Body: Sidebar 100+ Catalog | React Flow Canvas | Properties Side Drawer */}
       <div className="flex-1 flex overflow-hidden relative">
         {/* Sidebar 100+ Nodes Catalog */}
-        <div className={`${isSidebarOpen ? 'w-80' : 'w-12'} bg-white border-l border-slate-200 flex flex-col transition-all duration-300 shrink-0 z-10 shadow-sm`}>
+        <div className={`${isSidebarOpen ? 'w-72 sm:w-80 absolute inset-y-0 right-0 z-30 shadow-2xl md:relative md:inset-auto md:z-10' : 'w-12'} bg-white border-l border-slate-200 flex flex-col transition-all duration-300 shrink-0 shadow-sm`}>
           <div className="p-3 border-b border-slate-100 flex items-center justify-between bg-slate-50">
             {isSidebarOpen && (
               <div className="flex items-center space-x-2 space-x-reverse min-w-0">
