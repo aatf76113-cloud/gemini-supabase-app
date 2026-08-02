@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyToClipboard } from '../utils/clipboard';
 import { 
   Key, 
   Eye, 
@@ -137,8 +138,8 @@ export const SecretsVaultView: React.FC<SecretsVaultViewProps> = ({ language }) 
     setShowAddModal(false);
   };
 
-  const handleCopyKey = (keyName: string) => {
-    navigator.clipboard.writeText(`{{secrets.${keyName}}}`);
+  const handleCopyKey = async (keyName: string) => {
+    await copyToClipboard(`{{secrets.${keyName}}}`);
     setCopiedKey(keyName);
     setTimeout(() => setCopiedKey(null), 2000);
   };

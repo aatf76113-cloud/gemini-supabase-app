@@ -8,7 +8,7 @@ interface PushNotificationManagerProps {
 
 export const PushNotificationManager: React.FC<PushNotificationManagerProps> = ({ isRtl = true }) => {
   const [permission, setPermission] = useState<NotificationPermission>(
-    'Notification' in window ? Notification.permission : 'denied'
+    typeof window !== 'undefined' && 'Notification' in window ? Notification.permission : 'denied'
   );
   const [testSent, setTestSent] = useState(false);
 
@@ -17,16 +17,36 @@ export const PushNotificationManager: React.FC<PushNotificationManagerProps> = (
     setPermission(perm);
   };
 
-  const handleSendTestNotification = () => {
+  const handleSendTestNotification = async () => {
     if (permission === 'granted') {
-      new Notification('Zain Automation - اختبار التنبيهات الفورية', {
-        body: 'تم استلام هذا الإشعار التجريبي من منصة Zain Automation بنجاح.',
-        icon: '/icons/icon.svg',
-        dir: 'rtl',
-        lang: 'ar'
-      });
-      setTestSent(true);
-      setTimeout(() => setTestSent(false), 3000);
+      try {
+        if ('serviceWorker' in navigator) {
+          const reg = await navigator.serviceWorker.ready.catch(() => null);
+          if (reg && reg.showNotification) {
+            await reg.showNotification('Zain Automation - اختبار التنبيهات الفورية', {
+              body: 'تم استلام هذا الإشعار التجريبي من منصة Zain Automation بنجاح.',
+              icon: './icons/icon.svg',
+              dir: 'rtl',
+              lang: 'ar'
+            });
+            setTestSent(true);
+            setTimeout(() => setTestSent(false), 3000);
+            return;
+          }
+        }
+        if (typeof Notification !== 'undefined') {
+          new Notification('Zain Automation - اختبار التنبيهات الفورية', {
+            body: 'تم استلام هذا الإشعار التجريبي من منصة Zain Automation بنجاح.',
+            icon: './icons/icon.svg',
+            dir: 'rtl',
+            lang: 'ar'
+          });
+          setTestSent(true);
+          setTimeout(() => setTestSent(false), 3000);
+        }
+      } catch (err) {
+        console.warn('Failed to send notification:', err);
+      }
     }
   };
 

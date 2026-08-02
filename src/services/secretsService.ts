@@ -49,9 +49,11 @@ const INITIAL_SECRETS: VaultSecret[] = [
 
 export function getVaultSecrets(): VaultSecret[] {
   try {
-    const raw = localStorage.getItem('zain_vault_secrets');
-    if (raw) {
-      return JSON.parse(raw);
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const raw = localStorage.getItem('zain_vault_secrets');
+      if (raw) {
+        return JSON.parse(raw);
+      }
     }
   } catch (err) {
     console.error('Failed to load secrets:', err);
@@ -68,13 +70,25 @@ export function saveVaultSecret(secret: VaultSecret): VaultSecret[] {
   } else {
     updated = [secret, ...current];
   }
-  localStorage.setItem('zain_vault_secrets', JSON.stringify(updated));
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem('zain_vault_secrets', JSON.stringify(updated));
+    }
+  } catch (err) {
+    console.warn('Failed to save secret to localStorage:', err);
+  }
   return updated;
 }
 
 export function deleteVaultSecret(id: string): VaultSecret[] {
   const current = getVaultSecrets();
   const updated = current.filter(s => s.id !== id);
-  localStorage.setItem('zain_vault_secrets', JSON.stringify(updated));
+  try {
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem('zain_vault_secrets', JSON.stringify(updated));
+    }
+  } catch (err) {
+    console.warn('Failed to delete secret from localStorage:', err);
+  }
   return updated;
 }

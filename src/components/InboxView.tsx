@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { copyToClipboard } from '../utils/clipboard';
 import { 
   Inbox, 
   Send, 
@@ -91,8 +92,8 @@ export const InboxView: React.FC<InboxViewProps> = ({ language }) => {
 
   const webhookUrl = 'https://api.zainauto.io/v1/hooks/live-listener';
 
-  const handleCopyUrl = () => {
-    navigator.clipboard.writeText(webhookUrl);
+  const handleCopyUrl = async () => {
+    await copyToClipboard(webhookUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };

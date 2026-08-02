@@ -48,8 +48,10 @@ class TrialService {
   // Demo fallback state if offline or Firestore empty
   private getLocalTrials(): Record<string, WorkspaceTrial> {
     try {
-      const stored = localStorage.getItem(this.LOCAL_STORAGE_KEY);
-      if (stored) return JSON.parse(stored);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem(this.LOCAL_STORAGE_KEY);
+        if (stored) return JSON.parse(stored);
+      }
     } catch (e) {
       console.warn("LocalStorage read error for trials:", e);
     }
@@ -58,7 +60,9 @@ class TrialService {
 
   private saveLocalTrials(trials: Record<string, WorkspaceTrial>) {
     try {
-      localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(trials));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.LOCAL_STORAGE_KEY, JSON.stringify(trials));
+      }
     } catch (e) {
       console.warn("LocalStorage write error for trials:", e);
     }
@@ -66,8 +70,10 @@ class TrialService {
 
   private getLocalReferrals(): ReferralReward[] {
     try {
-      const stored = localStorage.getItem(this.LOCAL_REFERRALS_KEY);
-      if (stored) return JSON.parse(stored);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem(this.LOCAL_REFERRALS_KEY);
+        if (stored) return JSON.parse(stored);
+      }
     } catch (e) {
       console.warn("LocalStorage read error for referrals:", e);
     }
@@ -76,7 +82,9 @@ class TrialService {
 
   private saveLocalReferrals(rewards: ReferralReward[]) {
     try {
-      localStorage.setItem(this.LOCAL_REFERRALS_KEY, JSON.stringify(rewards));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.LOCAL_REFERRALS_KEY, JSON.stringify(rewards));
+      }
     } catch (e) {
       console.warn("LocalStorage write error for referrals:", e);
     }
@@ -84,8 +92,10 @@ class TrialService {
 
   private getLocalExtensions(): TrialExtensionRecord[] {
     try {
-      const stored = localStorage.getItem(this.LOCAL_EXTENSIONS_KEY);
-      if (stored) return JSON.parse(stored);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem(this.LOCAL_EXTENSIONS_KEY);
+        if (stored) return JSON.parse(stored);
+      }
     } catch (e) {
       console.warn("LocalStorage read error for extensions:", e);
     }
@@ -94,7 +104,9 @@ class TrialService {
 
   private saveLocalExtensions(exts: TrialExtensionRecord[]) {
     try {
-      localStorage.setItem(this.LOCAL_EXTENSIONS_KEY, JSON.stringify(exts));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(this.LOCAL_EXTENSIONS_KEY, JSON.stringify(exts));
+      }
     } catch (e) {
       console.warn("LocalStorage write error for extensions:", e);
     }

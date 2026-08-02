@@ -426,10 +426,12 @@ class ConnectionManager {
 
     // 2. LocalStorage Fallback
     try {
-      const stored = localStorage.getItem(`${this.localDataKey}_${userId}`);
-      if (stored) {
-        const parsed = JSON.parse(stored) as AppConnection[];
-        return this.mergeWithCatalog(parsed, userId);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const stored = localStorage.getItem(`${this.localDataKey}_${userId}`);
+        if (stored) {
+          const parsed = JSON.parse(stored) as AppConnection[];
+          return this.mergeWithCatalog(parsed, userId);
+        }
       }
     } catch (e) {
       console.warn('LocalStorage connections read error:', e);
@@ -469,7 +471,9 @@ class ConnectionManager {
 
   private saveToLocalStorage(userId: string, connections: AppConnection[]) {
     try {
-      localStorage.setItem(`${this.localDataKey}_${userId}`, JSON.stringify(connections));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(`${this.localDataKey}_${userId}`, JSON.stringify(connections));
+      }
     } catch (e) {
       console.warn('Failed to save connections to LocalStorage:', e);
     }

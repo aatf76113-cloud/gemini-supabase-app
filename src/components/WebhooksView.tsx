@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { copyToClipboard } from '../utils/clipboard';
 import { Language } from '../types';
 import { 
   Webhook, 
@@ -133,8 +134,8 @@ export const WebhooksView: React.FC<WebhooksViewProps> = ({ language }) => {
     fetchFirestoreWebhooks();
   }, []);
 
-  const handleCopy = (id: string, text: string) => {
-    navigator.clipboard.writeText(text);
+  const handleCopy = async (id: string, text: string) => {
+    await copyToClipboard(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
   };

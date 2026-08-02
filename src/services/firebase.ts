@@ -529,6 +529,17 @@ const INITIAL_CONNECTIONS: AppConnection[] = [
   }
 ];
 
+// Safe Environment variable retrieval helper
+const getEnvVal = (key: string, fallback: string = ''): string => {
+  if (typeof import.meta !== 'undefined' && (import.meta as any).env?.[key]) {
+    return (import.meta as any).env[key];
+  }
+  if (typeof process !== 'undefined' && process.env?.[key]) {
+    return process.env[key]!;
+  }
+  return fallback;
+};
+
 // Helper to check if Firebase web app config is present
 export let firebaseApp: any = null;
 export let firebaseAuth: any = null;
@@ -537,12 +548,12 @@ export let firebaseDb: any = null;
 try {
   // Check runtime window or env firebase config
   const firebaseConfig = {
-    apiKey: process.env.VITE_FIREBASE_API_KEY || "AIzaSyDxul2HsPXCOX6naJE-WCZUhFYlNX_ALag",
-    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || "gen-lang-client-0599557086.firebaseapp.com",
-    projectId: process.env.VITE_FIREBASE_PROJECT_ID || "gen-lang-client-0599557086",
-    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || "gen-lang-client-0599557086.firebasestorage.app",
-    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "294576871200",
-    appId: process.env.VITE_FIREBASE_APP_ID || "1:294576871200:web:4ce2a387a4ae3bb2046945"
+    apiKey: getEnvVal("VITE_FIREBASE_API_KEY", "AIzaSyDxul2HsPXCOX6naJE-WCZUhFYlNX_ALag"),
+    authDomain: getEnvVal("VITE_FIREBASE_AUTH_DOMAIN", "gen-lang-client-0599557086.firebaseapp.com"),
+    projectId: getEnvVal("VITE_FIREBASE_PROJECT_ID", "gen-lang-client-0599557086"),
+    storageBucket: getEnvVal("VITE_FIREBASE_STORAGE_BUCKET", "gen-lang-client-0599557086.firebasestorage.app"),
+    messagingSenderId: getEnvVal("VITE_FIREBASE_MESSAGING_SENDER_ID", "294576871200"),
+    appId: getEnvVal("VITE_FIREBASE_APP_ID", "1:294576871200:web:4ce2a387a4ae3bb2046945")
   };
 
   if (!getApps().length) {
@@ -562,19 +573,23 @@ export const db = firebaseDb;
 // Local storage persistent fallback helper
 const getLocalData = <T>(key: string, fallback: T): T => {
   try {
-    const item = localStorage.getItem(`zain_auto_${key}`);
-    if (item) return JSON.parse(item);
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      const item = localStorage.getItem(`zain_auto_${key}`);
+      if (item) return JSON.parse(item);
+    }
   } catch (e) {
-    console.error(`Error reading ${key} from storage`, e);
+    console.warn(`Error reading ${key} from storage`, e);
   }
   return fallback;
 };
 
 const setLocalData = <T>(key: string, data: T): void => {
   try {
-    localStorage.setItem(`zain_auto_${key}`, JSON.stringify(data));
+    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+      localStorage.setItem(`zain_auto_${key}`, JSON.stringify(data));
+    }
   } catch (e) {
-    console.error(`Error writing ${key} to storage`, e);
+    console.warn(`Error writing ${key} to storage`, e);
   }
 };
 
@@ -944,7 +959,7 @@ export const workflowService = {
       console.warn("Supabase workflows fetch error, fallback to local:", err);
     }
 
-    if (firebaseDb && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseDb && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         const q = query(collection(firebaseDb, 'workflows'), orderBy('createdAt', 'desc'));
         const snap = await getDocs(q);
@@ -998,7 +1013,7 @@ export const workflowService = {
       console.warn("Supabase workflow save error:", e);
     }
 
-    if (firebaseDb && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseDb && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         await setDoc(doc(firebaseDb, 'workflows', workflow.id), workflow, { merge: true });
       } catch (e) {
@@ -1032,7 +1047,7 @@ export const workflowService = {
       console.warn("Supabase workflow delete error:", e);
     }
 
-    if (firebaseDb && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseDb && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         await deleteDoc(doc(firebaseDb, 'workflows', id));
       } catch (e) {
@@ -1055,7 +1070,7 @@ export const workflowService = {
 
 export const executionService = {
   async getExecutions(workspaceId?: string): Promise<ExecutionLog[]> {
-    if (firebaseDb && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseDb && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         const q = query(collection(firebaseDb, 'executions'), orderBy('executedAt', 'desc'));
         const snap = await getDocs(q);
@@ -1076,7 +1091,7 @@ export const executionService = {
     const updated = [log, ...current];
     setLocalData('executions', updated);
 
-    if (firebaseDb && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseDb && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         await setDoc(doc(firebaseDb, 'executions', log.id), log);
       } catch (e) {
@@ -1213,7 +1228,7 @@ export const authService = {
       console.warn("Supabase Auth sign in error:", e);
     }
 
-    if (firebaseAuth && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseAuth && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         const cred = await signInWithEmailAndPassword(firebaseAuth, email, pass);
         const userProfile: UserProfile = {
@@ -1263,7 +1278,7 @@ export const authService = {
       console.warn("Supabase Auth signup error:", e);
     }
 
-    if (firebaseAuth && process.env.VITE_FIREBASE_API_KEY) {
+    if (firebaseAuth && getEnvVal("VITE_FIREBASE_API_KEY")) {
       try {
         const cred = await createUserWithEmailAndPassword(firebaseAuth, email, pass);
         const userProfile: UserProfile = {
@@ -1311,7 +1326,11 @@ export const authService = {
     if (firebaseAuth) {
       firebaseSignOut(firebaseAuth).catch(() => {});
     }
-    localStorage.removeItem('zain_auto_user');
+    try {
+      localStorage.removeItem('zain_auto_user');
+    } catch (e) {
+      console.warn('Failed to clear user from localStorage:', e);
+    }
   }
 };
 

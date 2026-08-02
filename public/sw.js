@@ -3,12 +3,10 @@ const CACHE_NAME = 'zain-auto-v2.4.0-prod';
 const DYNAMIC_CACHE = 'zain-dynamic-v2.4.0';
 
 const PRECACHE_ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/version.json',
-  '/src/main.tsx',
-  '/src/index.css'
+  './',
+  './index.html',
+  './manifest.json',
+  './version.json'
 ];
 
 // Install Event
@@ -17,8 +15,10 @@ self.addEventListener('install', (event) => {
     caches.open(CACHE_NAME).then((cache) => {
       console.log('[ServiceWorker] Precaching app shell...');
       return cache.addAll(PRECACHE_ASSETS).catch((err) => {
-        console.warn('[ServiceWorker] Pre-cache partial error:', err);
+        console.warn('[ServiceWorker] Pre-cache partial warning:', err);
       });
+    }).catch((e) => {
+      console.warn('[ServiceWorker] Cache open error:', e);
     })
   );
   self.skipWaiting();
@@ -32,10 +32,12 @@ self.addEventListener('activate', (event) => {
         keyList.map((key) => {
           if (key !== CACHE_NAME && key !== DYNAMIC_CACHE) {
             console.log('[ServiceWorker] Removing old cache:', key);
-            return caches.delete(key);
+            return caches.delete(key).catch(() => {});
           }
         })
       );
+    }).catch((e) => {
+      console.warn('[ServiceWorker] Cache keys error:', e);
     })
   );
   return self.clients.claim();
@@ -44,46 +46,74 @@ self.addEventListener('activate', (event) => {
 // Fetch Event (Network-first for API, Cache-first for static assets)
 self.addEventListener('fetch', (event) => {
   const req = event.request;
-  const url = new URL(req.url);
+  if (!req || req.method !== 'GET') return;
 
-  // Skip non-GET requests or browser extension URLs
-  if (req.method !== 'GET' || !url.protocol.startsWith('http')) return;
+  let url;
+  try {
+    url = new URL(req.url);
+  } catch (e) {
+    return;
+  }
 
-  // Handle API calls (Network-first)
-  if (url.pathname.startsWith('/api/') || url.hostname.includes('firestore') || url.hostname.includes('googleapis')) {
+  if (!url || !url.protocol.startsWith('http')) return;
+
+  // Handle API & Firestore calls (Network-first with fallback)
+  if (url.pathname.startsWith('/api/') || url.hostname.includes('firestore') || url.hostname.includes('googleapis') || url.hostname.includes('supabase')) {
     event.respondWith(
       fetch(req)
         .then((networkRes) => {
-          if (networkRes.status === 200) {
+          if (networkRes && networkRes.status === 200 && networkRes.type === 'basic') {
             const resClone = networkRes.clone();
-            caches.open(DYNAMIC_CACHE).then((cache) => cache.put(req, resClone));
+            caches.open(DYNAMIC_CACHE).then((cache) => {
+              try {
+                cache.put(req, resClone).catch(() => {});
+              } catch (e) {}
+            }).catch(() => {});
           }
           return networkRes;
         })
-        .catch(() => caches.match(req))
+        .catch(async () => {
+          try {
+            const cached = await caches.match(req);
+            if (cached) return cached;
+          } catch (e) {}
+          return new Response(JSON.stringify({ error: 'Offline', offline: true }), {
+            status: 503,
+            headers: { 'Content-Type': 'application/json' }
+          });
+        })
     );
     return;
   }
 
-  // Handle App Shell & Assets (Stale-While-Revalidate / Cache First)
+  // Handle App Shell & Static Assets (Cache-first with network fallback)
   event.respondWith(
     caches.match(req).then((cachedRes) => {
-      const fetchPromise = fetch(req)
+      if (cachedRes) return cachedRes;
+
+      return fetch(req)
         .then((networkRes) => {
-          if (networkRes && networkRes.status === 200) {
+          if (networkRes && networkRes.status === 200 && (networkRes.type === 'basic' || networkRes.type === 'cors')) {
             const resClone = networkRes.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(req, resClone));
+            caches.open(CACHE_NAME).then((cache) => {
+              try {
+                cache.put(req, resClone).catch(() => {});
+              } catch (e) {}
+            }).catch(() => {});
           }
           return networkRes;
         })
-        .catch(() => {
-          // Fallback to index.html for SPA offline navigation
+        .catch(async () => {
           if (req.mode === 'navigate') {
-            return caches.match('/index.html');
+            try {
+              const fallback = (await caches.match('./index.html')) || (await caches.match('/index.html'));
+              if (fallback) return fallback;
+            } catch (e) {}
           }
+          return new Response('Offline', { status: 503, statusText: 'Offline' });
         });
-
-      return cachedRes || fetchPromise;
+    }).catch(() => {
+      return fetch(req).catch(() => new Response('Offline', { status: 503 }));
     })
   );
 });
@@ -101,23 +131,27 @@ self.addEventListener('push', (event) => {
 
   const options = {
     body: data.body,
-    icon: '/icons/icon-192x192.png',
-    badge: '/icons/icon-192x192.png',
+    icon: './icons/icon.svg',
+    badge: './icons/icon.svg',
     dir: 'rtl',
     lang: 'ar',
     vibrate: [100, 50, 100],
     data: {
-      url: data.url || '/'
+      url: data.url || './'
     }
   };
 
-  event.waitUntil(self.registration.showNotification(data.title, options));
+  event.waitUntil(
+    self.registration.showNotification(data.title, options).catch((e) => {
+      console.warn('[ServiceWorker] showNotification failed:', e);
+    })
+  );
 });
 
 // Notification Click Event
 self.addEventListener('notificationclick', (event) => {
   event.notification.close();
-  const targetUrl = event.notification.data?.url || '/';
+  const targetUrl = event.notification.data?.url || './';
 
   event.waitUntil(
     clients.matchAll({ type: 'window', includeUncontrolled: true }).then((windowClients) => {
@@ -129,6 +163,8 @@ self.addEventListener('notificationclick', (event) => {
       if (clients.openWindow) {
         return clients.openWindow(targetUrl);
       }
+    }).catch((e) => {
+      console.warn('[ServiceWorker] Notification click navigation error:', e);
     })
   );
 });

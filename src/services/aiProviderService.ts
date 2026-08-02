@@ -319,26 +319,30 @@ class AIProviderService {
 
   private loadState() {
     try {
-      const storedPool = localStorage.getItem(STORAGE_KEYS.KEY_POOL);
-      if (storedPool) {
-        this.keyPool = JSON.parse(storedPool);
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const storedPool = localStorage.getItem(STORAGE_KEYS.KEY_POOL);
+        if (storedPool) {
+          this.keyPool = JSON.parse(storedPool);
+        } else {
+          this.keyPool = [...DEFAULT_KEY_POOL];
+          this.saveKeyPool();
+        }
+
+        const storedCache = localStorage.getItem(STORAGE_KEYS.CACHE);
+        if (storedCache) {
+          const parsed = JSON.parse(storedCache) as AICacheEntry[];
+          parsed.forEach(item => this.cache.set(item.hash, item));
+        }
+
+        const storedConfig = localStorage.getItem(STORAGE_KEYS.CONFIG);
+        if (storedConfig) {
+          const config = JSON.parse(storedConfig);
+          this.autoFailover = config.autoFailover ?? true;
+          this.autoKeyRotation = config.autoKeyRotation ?? true;
+          this.cacheEnabled = config.cacheEnabled ?? true;
+        }
       } else {
         this.keyPool = [...DEFAULT_KEY_POOL];
-        this.saveKeyPool();
-      }
-
-      const storedCache = localStorage.getItem(STORAGE_KEYS.CACHE);
-      if (storedCache) {
-        const parsed = JSON.parse(storedCache) as AICacheEntry[];
-        parsed.forEach(item => this.cache.set(item.hash, item));
-      }
-
-      const storedConfig = localStorage.getItem(STORAGE_KEYS.CONFIG);
-      if (storedConfig) {
-        const config = JSON.parse(storedConfig);
-        this.autoFailover = config.autoFailover ?? true;
-        this.autoKeyRotation = config.autoKeyRotation ?? true;
-        this.cacheEnabled = config.cacheEnabled ?? true;
       }
     } catch (e) {
       console.warn('Failed to load AI Provider Service state:', e);
@@ -348,7 +352,9 @@ class AIProviderService {
 
   public saveKeyPool() {
     try {
-      localStorage.setItem(STORAGE_KEYS.KEY_POOL, JSON.stringify(this.keyPool));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.KEY_POOL, JSON.stringify(this.keyPool));
+      }
     } catch (e) {
       console.warn('Failed to save key pool:', e);
     }
@@ -356,8 +362,10 @@ class AIProviderService {
 
   public saveCache() {
     try {
-      const array = Array.from(this.cache.values()).slice(-100); // keep max 100 recent entries
-      localStorage.setItem(STORAGE_KEYS.CACHE, JSON.stringify(array));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const array = Array.from(this.cache.values()).slice(-100); // keep max 100 recent entries
+        localStorage.setItem(STORAGE_KEYS.CACHE, JSON.stringify(array));
+      }
     } catch (e) {
       console.warn('Failed to save AI cache:', e);
     }
@@ -365,11 +373,13 @@ class AIProviderService {
 
   public saveConfig() {
     try {
-      localStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify({
-        autoFailover: this.autoFailover,
-        autoKeyRotation: this.autoKeyRotation,
-        cacheEnabled: this.cacheEnabled
-      }));
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        localStorage.setItem(STORAGE_KEYS.CONFIG, JSON.stringify({
+          autoFailover: this.autoFailover,
+          autoKeyRotation: this.autoKeyRotation,
+          cacheEnabled: this.cacheEnabled
+        }));
+      }
     } catch (e) {
       console.warn('Failed to save AI config:', e);
     }
@@ -432,7 +442,11 @@ class AIProviderService {
 
   public clearCache() {
     this.cache.clear();
-    localStorage.removeItem(STORAGE_KEYS.CACHE);
+    try {
+      localStorage.removeItem(STORAGE_KEYS.CACHE);
+    } catch (e) {
+      console.warn('Failed to remove cache from localStorage:', e);
+    }
   }
 
   // Hash helper for prompt caching

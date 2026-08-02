@@ -12,17 +12,19 @@ export const OfflineBanner: React.FC<OfflineBannerProps> = ({ isRtl = true }) =>
 
   useEffect(() => {
     return pwaService.onOnlineChange((onlineStatus) => {
-      if (!onlineStatus) {
-        setIsOnline(false);
-      } else {
-        if (!isOnline) {
-          setShowReconnectedToast(true);
-          setTimeout(() => setShowReconnectedToast(false), 4000);
+      setIsOnline((prevOnline) => {
+        if (!onlineStatus) {
+          return false;
+        } else {
+          if (!prevOnline) {
+            setShowReconnectedToast(true);
+            setTimeout(() => setShowReconnectedToast(false), 4000);
+          }
+          return true;
         }
-        setIsOnline(true);
-      }
+      });
     });
-  }, [isOnline]);
+  }, []);
 
   if (isOnline && !showReconnectedToast) return null;
 

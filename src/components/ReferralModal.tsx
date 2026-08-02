@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { copyToClipboard } from '../utils/clipboard';
 import { Language, ReferralStats, WorkspaceTrial } from '../types';
 import { trialService } from '../services/trialService';
 import { 
@@ -66,17 +67,17 @@ export const ReferralModal: React.FC<ReferralModalProps> = ({
 
   if (!isOpen) return null;
 
-  const handleCopyCode = () => {
+  const handleCopyCode = async () => {
     if (stats?.referralCode) {
-      navigator.clipboard.writeText(stats.referralCode);
+      await copyToClipboard(stats.referralCode);
       setCopiedCode(true);
       setTimeout(() => setCopiedCode(false), 2000);
     }
   };
 
-  const handleCopyUrl = () => {
+  const handleCopyUrl = async () => {
     if (stats?.referralUrl) {
-      navigator.clipboard.writeText(stats.referralUrl);
+      await copyToClipboard(stats.referralUrl);
       setCopiedUrl(true);
       setTimeout(() => setCopiedUrl(false), 2000);
     }

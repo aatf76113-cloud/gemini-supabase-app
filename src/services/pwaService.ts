@@ -19,7 +19,7 @@ export interface BeforeInstallPromptEvent extends Event {
 
 class PwaService {
   private deferredPrompt: BeforeInstallPromptEvent | null = null;
-  private isOnlineStatus: boolean = navigator.onLine;
+  private isOnlineStatus: boolean = typeof navigator !== 'undefined' ? navigator.onLine : true;
   private currentVersion: string = '2.4.0-prod';
   private updateAvailable: boolean = false;
   private swRegistration: ServiceWorkerRegistration | null = null;
@@ -34,6 +34,8 @@ class PwaService {
 
   // Initialize Network listeners
   private initNetworkListeners() {
+    if (typeof window === 'undefined') return;
+
     window.addEventListener('online', () => {
       this.isOnlineStatus = true;
       this.notifyOnlineListeners(true);
@@ -65,7 +67,8 @@ class PwaService {
     }
 
     try {
-      const reg = await navigator.serviceWorker.register('/sw.js', { scope: '/' });
+      const swUrl = new URL('sw.js', window.location.href).href;
+      const reg = await navigator.serviceWorker.register(swUrl);
       this.swRegistration = reg;
       console.log('[PWA] ServiceWorker registered with scope:', reg.scope);
 
@@ -98,7 +101,8 @@ class PwaService {
   // Check version.json for updates
   public async checkVersionUpdate(): Promise<VersionInfo | null> {
     try {
-      const res = await fetch(`/version.json?t=${Date.now()}`);
+      const versionUrl = new URL('version.json', window.location.href).href;
+      const res = await fetch(`${versionUrl}?t=${Date.now()}`);
       if (!res.ok) return null;
       const data: VersionInfo = await res.json();
 
@@ -144,20 +148,39 @@ class PwaService {
 
   // Push Notifications handling
   public async requestNotificationPermission(): Promise<NotificationPermission> {
-    if (!('Notification' in window)) {
+    if (typeof window === 'undefined' || !('Notification' in window)) {
       return 'denied';
     }
 
-    const permission = await Notification.requestPermission();
-    if (permission === 'granted' && this.swRegistration) {
-      this.swRegistration.showNotification('Zain Automation - التنبيهات مفعّلة', {
-        body: 'تم تفعيل إشعارات مسارات العمل بنجاح على هذا الجهاز.',
-        icon: '/icons/icon.svg',
-        dir: 'rtl',
-        lang: 'ar'
-      });
+    try {
+      let permission: NotificationPermission = Notification.permission;
+      if (permission === 'default') {
+        permission = await new Promise<NotificationPermission>((resolve) => {
+          const res = Notification.requestPermission((p) => resolve(p));
+          if (res && typeof res.then === 'function') {
+            res.then(resolve);
+          }
+        });
+      }
+
+      if (permission === 'granted') {
+        if ('serviceWorker' in navigator) {
+          const reg = await navigator.serviceWorker.ready.catch(() => null);
+          if (reg && reg.showNotification) {
+            reg.showNotification('Zain Automation - التنبيهات مفعّلة', {
+              body: 'تم تفعيل إشعارات مسارات العمل بنجاح على هذا الجهاز.',
+              icon: './icons/icon.svg',
+              dir: 'rtl',
+              lang: 'ar'
+            }).catch(() => {});
+          }
+        }
+      }
+      return permission;
+    } catch (e) {
+      console.warn('[PWA] Notification permission error:', e);
+      return 'denied';
     }
-    return permission;
   }
 
   // Getters & Event Subscription
