@@ -132,6 +132,14 @@ export default function App() {
     document.documentElement.lang = language;
   }, [language]);
 
+  // Subscribe to Authentication state changes (Firebase Auth observer)
+  useEffect(() => {
+    const unsubscribe = authService.onAuthStateChanged((currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
   // Load Workspaces for User
   useEffect(() => {
     const initWorkspaces = async () => {

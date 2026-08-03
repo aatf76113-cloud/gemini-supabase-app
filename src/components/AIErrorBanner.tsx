@@ -85,6 +85,22 @@ export const AIErrorBanner: React.FC<AIErrorBannerProps> = ({
           <RotateCcw className="w-3.5 h-3.5" />
           <span>إعادة المحاولة والمتابعة بـ Gemini API</span>
         </button>
+
+        <button
+          onClick={() => setShowKeyModal(true)}
+          className="px-3.5 py-2 bg-rose-100 hover:bg-rose-200 text-rose-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-rose-200"
+        >
+          <Key className="w-3.5 h-3.5 text-amber-600" />
+          <span>تغيير المفتاح</span>
+        </button>
+
+        <button
+          onClick={() => setShowProviderModal(true)}
+          className="px-3.5 py-2 bg-white hover:bg-rose-100 text-rose-900 font-bold text-xs rounded-xl transition-all flex items-center gap-1.5 border border-rose-200"
+        >
+          <Cpu className="w-3.5 h-3.5 text-indigo-600" />
+          <span>تحويل المزود</span>
+        </button>
       </div>
 
       {/* Change Key Modal */}

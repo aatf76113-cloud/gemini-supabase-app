@@ -1331,6 +1331,33 @@ export const authService = {
     } catch (e) {
       console.warn('Failed to clear user from localStorage:', e);
     }
+  },
+
+  onAuthStateChanged(callback: (user: UserProfile | null) => void): () => void {
+    if (firebaseAuth && getEnvVal("VITE_FIREBASE_API_KEY")) {
+      return onAuthStateChanged(firebaseAuth, (fbUser) => {
+        if (fbUser) {
+          const userProfile: UserProfile = {
+            uid: fbUser.uid,
+            email: fbUser.email || '',
+            displayName: fbUser.displayName || fbUser.email?.split('@')[0] || 'المستخدم',
+            photoURL: fbUser.photoURL || undefined,
+            role: 'admin',
+            language: 'ar',
+            createdAt: new Date().toISOString()
+          };
+          setLocalData('user', userProfile);
+          callback(userProfile);
+        } else {
+          const current = this.getCurrentUser();
+          callback(current);
+        }
+      });
+    }
+    // Fallback sync call
+    const current = this.getCurrentUser();
+    callback(current);
+    return () => {};
   }
 };
 

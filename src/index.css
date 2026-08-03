@@ -49,3 +49,49 @@
   background-image: radial-gradient(#cbd5e1 1.2px, transparent 1.2px);
   background-size: 24px 24px;
 }
+
+/* Mobile & Desktop Responsiveness Media Queries */
+.sidebar {
+  width: 280px;
+  transition: transform 0.3s ease-in-out;
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    z-index: 50;
+    transform: translateX(-100%);
+  }
+
+  [dir="rtl"] .sidebar {
+    transform: translateX(100%);
+  }
+
+  .sidebar.open {
+    transform: translateX(0) !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+  .mobile-full-width {
+    width: 100% !important;
+  }
+  .mobile-card-grid {
+    grid-template-columns: repeat(1, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+  .desktop-only {
+    display: block !important;
+  }
+}
