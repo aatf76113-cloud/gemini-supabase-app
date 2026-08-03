@@ -49,14 +49,14 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       {/* Quick Action FAB Menu Backdrop */}
       {isFabOpen && (
         <div 
-          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 md:hidden animate-in fade-in duration-150"
+          className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden animate-in fade-in duration-150"
           onClick={() => setIsFabOpen(false)}
         />
       )}
 
       {/* Quick Action FAB Expanded Choices */}
       {isFabOpen && (
-        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 md:hidden flex flex-col items-center gap-2.5 animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50 lg:hidden flex flex-col items-center gap-2.5 animate-in slide-in-from-bottom-5 duration-200">
           <button
             onClick={() => {
               setIsFabOpen(false);
@@ -82,7 +82,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({
       )}
 
       {/* Bottom Navigation Bar Container */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1 flex items-center justify-around md:hidden select-none">
+      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_20px_rgba(0,0,0,0.06)] px-2 py-1 flex items-center justify-around lg:hidden select-none">
         {/* Left Side Items */}
         {mainTabs.slice(0, 2).map((tab) => {
           const isActive = activeTab === tab.id;

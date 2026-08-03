@@ -155,8 +155,46 @@ export const AuditLogView: React.FC<AuditLogViewProps> = ({
         </div>
       </div>
 
-      {/* Logs Table */}
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+      {/* Mobile Card List View for Audit Logs */}
+      <div className="block sm:hidden space-y-3">
+        {filteredLogs.length === 0 ? (
+          <div className="p-8 text-center text-slate-400 bg-white rounded-2xl border border-slate-200">
+            {isAr ? 'لا توجد سجلات تدقيق تطابق شروط البحث' : 'No audit records found matching query'}
+          </div>
+        ) : (
+          filteredLogs.map((log) => (
+            <div
+              key={log.id}
+              onClick={() => setSelectedLog(log)}
+              className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm space-y-2.5 active:bg-slate-50 transition-colors"
+            >
+              <div className="flex items-center justify-between">
+                <div>{getActionBadge(log.action)}</div>
+                <span className="text-[10px] text-slate-400 font-mono">
+                  {new Date(log.createdAt).toLocaleString(isAr ? 'ar-SA' : 'en-US', { dateStyle: 'short', timeStyle: 'short' })}
+                </span>
+              </div>
+
+              <div className="flex items-center space-x-2 space-x-reverse">
+                <div className="w-7 h-7 bg-indigo-50 text-indigo-700 rounded-lg flex items-center justify-center font-bold text-xs shrink-0">
+                  {log.userName.charAt(0).toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <span className="font-extrabold text-xs text-slate-900 block truncate">{log.userName}</span>
+                  <span className="text-[10px] text-slate-400 font-mono truncate block">{log.userEmail}</span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-700 bg-slate-50 p-2.5 rounded-xl border border-slate-100 font-medium">
+                {log.details}
+              </p>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Logs Table */}
+      <div className="hidden sm:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-right text-xs">
             <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-extrabold text-[10px] tracking-wider">

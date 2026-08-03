@@ -49,7 +49,11 @@ export const TrialUsageBanner: React.FC<TrialUsageBannerProps> = ({
 
   useEffect(() => {
     fetchTrial();
-    const interval = setInterval(fetchTrial, 10000); // refresh every 10s
+    const interval = setInterval(() => {
+      if (document.visibilityState !== 'hidden') {
+        fetchTrial();
+      }
+    }, 15000); // refresh every 15s when active
     return () => clearInterval(interval);
   }, [workspaceId, userId, userEmail]);
 

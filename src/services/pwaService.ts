@@ -86,9 +86,11 @@ class PwaService {
         }
       });
 
-      // Periodically check version every 15 minutes
+      // Periodically check version every 15 minutes when active
       setInterval(() => {
-        this.checkVersionUpdate();
+        if (document.visibilityState !== 'hidden') {
+          this.checkVersionUpdate();
+        }
       }, 15 * 60 * 1000);
 
       // Check version on initial load

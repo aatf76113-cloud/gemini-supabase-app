@@ -46,9 +46,11 @@ export const StatusView: React.FC<StatusViewProps> = ({ language }) => {
     // 1. Instant load from cache
     loadStatus(true);
 
-    // 2. Background Job / Cron: Refresh latency silently every 30 seconds
+    // 2. Background Job / Cron: Refresh latency silently every 30 seconds when tab is active
     const interval = setInterval(() => {
-      statusService.getServicesStatus().then(data => setServices(data));
+      if (document.visibilityState !== 'hidden') {
+        statusService.getServicesStatus().then(data => setServices(data));
+      }
     }, 30000);
 
     return () => clearInterval(interval);

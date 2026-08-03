@@ -81,8 +81,10 @@ export const MonitoringDashboardView: React.FC<MonitoringDashboardViewProps> = (
   useEffect(() => {
     fetchTelemetryData();
     const interval = setInterval(() => {
-      fetchTelemetryData();
-    }, 4000);
+      if (document.visibilityState !== 'hidden') {
+        fetchTelemetryData();
+      }
+    }, 8000);
 
     return () => clearInterval(interval);
   }, []);

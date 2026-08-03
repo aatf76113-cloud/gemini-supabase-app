@@ -119,7 +119,7 @@ export const NotificationsCenter: React.FC<NotificationsCenterProps> = ({
 
   if (isDropdownMode) {
     return (
-      <div className="w-80 sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden text-slate-800 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2 duration-150">
+      <div className="w-[calc(100vw-2rem)] max-w-sm sm:w-96 bg-white rounded-xl shadow-2xl border border-slate-200 overflow-hidden text-slate-800 text-xs sm:text-sm animate-in fade-in slide-in-from-top-2 duration-150">
         <div className="p-3 bg-slate-900 text-white flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2 font-semibold">
             <Bell className="w-4 h-4 text-indigo-400" />

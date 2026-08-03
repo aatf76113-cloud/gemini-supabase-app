@@ -456,7 +456,7 @@ export const SettingsView: React.FC<SettingsViewProps> = ({
         {/* Submit */}
         <button
           type="submit"
-          className="px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-100 transition-all flex items-center space-x-2 space-x-reverse"
+          className="w-full sm:w-auto min-h-[48px] px-6 py-3.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-2xl shadow-lg shadow-indigo-100 transition-all flex items-center justify-center space-x-2 space-x-reverse"
         >
           <Save className="w-4 h-4" />
           <span>{isAr ? 'حفظ جميع إعدادات المنصة' : 'Save All Settings'}</span>

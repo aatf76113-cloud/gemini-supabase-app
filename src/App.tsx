@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import { 
   Language, 
   UserProfile, 
@@ -17,37 +17,41 @@ import { Sidebar } from './components/Sidebar';
 import { LandingPage } from './components/LandingPage';
 import { AuthModal } from './components/AuthModal';
 import { DashboardView } from './components/DashboardView';
-import { WorkflowsList } from './components/WorkflowsList';
-import { WorkflowCanvas } from './components/WorkflowCanvas';
-import { ConnectionsView } from './components/ConnectionsView';
-import { ExecutionsLogView } from './components/ExecutionsLogView';
-import { UserManagementView } from './components/UserManagementView';
-import { AIBuilderView } from './components/AIBuilderView';
-import { NodeMarketplaceView } from './components/NodeMarketplaceView';
-import { SecretsVaultView } from './components/SecretsVaultView';
-import { AnalyticsView } from './components/AnalyticsView';
-import { InboxView } from './components/InboxView';
-import { BillingView } from './components/BillingView';
-import { SettingsView } from './components/SettingsView';
-import { AIGeneratorModal } from './components/AIGeneratorModal';
+
+// Lazily loaded view components for low-memory mobile performance
+const WorkflowsList = lazy(() => import('./components/WorkflowsList').then(m => ({ default: m.WorkflowsList })));
+const WorkflowCanvas = lazy(() => import('./components/WorkflowCanvas').then(m => ({ default: m.WorkflowCanvas })));
+const ConnectionsView = lazy(() => import('./components/ConnectionsView').then(m => ({ default: m.ConnectionsView })));
+const ExecutionsLogView = lazy(() => import('./components/ExecutionsLogView').then(m => ({ default: m.ExecutionsLogView })));
+const UserManagementView = lazy(() => import('./components/UserManagementView').then(m => ({ default: m.UserManagementView })));
+const AIBuilderView = lazy(() => import('./components/AIBuilderView').then(m => ({ default: m.AIBuilderView })));
+const NodeMarketplaceView = lazy(() => import('./components/NodeMarketplaceView').then(m => ({ default: m.NodeMarketplaceView })));
+const SecretsVaultView = lazy(() => import('./components/SecretsVaultView').then(m => ({ default: m.SecretsVaultView })));
+const AnalyticsView = lazy(() => import('./components/AnalyticsView').then(m => ({ default: m.AnalyticsView })));
+const InboxView = lazy(() => import('./components/InboxView').then(m => ({ default: m.InboxView })));
+const BillingView = lazy(() => import('./components/BillingView').then(m => ({ default: m.BillingView })));
+const SettingsView = lazy(() => import('./components/SettingsView').then(m => ({ default: m.SettingsView })));
+const AIGeneratorModal = lazy(() => import('./components/AIGeneratorModal').then(m => ({ default: m.AIGeneratorModal })));
 
 // Beta Readiness & RC 1.0 Components
-import { AdminDashboardView } from './components/AdminDashboardView';
+const AdminDashboardView = lazy(() => import('./components/AdminDashboardView').then(m => ({ default: m.AdminDashboardView })));
+const StatusView = lazy(() => import('./components/StatusView').then(m => ({ default: m.StatusView })));
+const UsageView = lazy(() => import('./components/UsageView').then(m => ({ default: m.UsageView })));
+const TestingSuiteView = lazy(() => import('./components/TestingSuiteView').then(m => ({ default: m.TestingSuiteView })));
+const PricingView = lazy(() => import('./components/PricingView').then(m => ({ default: m.PricingView })));
+const ApiKeysView = lazy(() => import('./components/ApiKeysView').then(m => ({ default: m.ApiKeysView })));
+const WebhooksView = lazy(() => import('./components/WebhooksView').then(m => ({ default: m.WebhooksView })));
+const MonitoringDashboardView = lazy(() => import('./components/MonitoringDashboardView').then(m => ({ default: m.MonitoringDashboardView })));
+const DevelopersView = lazy(() => import('./components/DevelopersView').then(m => ({ default: m.DevelopersView })));
+const HelpCenterView = lazy(() => import('./components/HelpCenterView').then(m => ({ default: m.HelpCenterView })));
+const ReadinessReportView = lazy(() => import('./components/ReadinessReportView').then(m => ({ default: m.ReadinessReportView })));
+const AiProvidersView = lazy(() => import('./components/AiProvidersView').then(m => ({ default: m.AiProvidersView })));
+const AIDiagnosticsView = lazy(() => import('./components/AIDiagnosticsView').then(m => ({ default: m.AIDiagnosticsView })));
+const AIAgentsView = lazy(() => import('./components/AIAgentsView').then(m => ({ default: m.AIAgentsView })));
+const ComputerUseView = lazy(() => import('./components/ComputerUseView').then(m => ({ default: m.ComputerUseView })));
+
+// Synchronous layout & status overlays
 import { NotificationsCenter } from './components/NotificationsCenter';
-import { StatusView } from './components/StatusView';
-import { UsageView } from './components/UsageView';
-import { TestingSuiteView } from './components/TestingSuiteView';
-import { PricingView } from './components/PricingView';
-import { ApiKeysView } from './components/ApiKeysView';
-import { WebhooksView } from './components/WebhooksView';
-import { MonitoringDashboardView } from './components/MonitoringDashboardView';
-import { DevelopersView } from './components/DevelopersView';
-import { HelpCenterView } from './components/HelpCenterView';
-import { ReadinessReportView } from './components/ReadinessReportView';
-import { AiProvidersView } from './components/AiProvidersView';
-import { AIDiagnosticsView } from './components/AIDiagnosticsView';
-import { AIAgentsView } from './components/AIAgentsView';
-import { ComputerUseView } from './components/ComputerUseView';
 import { FeedbackModal } from './components/FeedbackModal';
 import { ErrorBoundary } from './components/ErrorBoundary';
 
@@ -61,10 +65,10 @@ import { UpdateNotifierToast } from './components/pwa/UpdateNotifierToast';
 import { InstallPwaModal } from './components/pwa/InstallPwaModal';
 
 // Multi-tenant components
-import { WorkspacesView } from './components/WorkspacesView';
-import { TeamManagementView } from './components/TeamManagementView';
-import { InvitationsView } from './components/InvitationsView';
-import { AuditLogView } from './components/AuditLogView';
+const WorkspacesView = lazy(() => import('./components/WorkspacesView').then(m => ({ default: m.WorkspacesView })));
+const TeamManagementView = lazy(() => import('./components/TeamManagementView').then(m => ({ default: m.TeamManagementView })));
+const InvitationsView = lazy(() => import('./components/InvitationsView').then(m => ({ default: m.InvitationsView })));
+const AuditLogView = lazy(() => import('./components/AuditLogView').then(m => ({ default: m.AuditLogView })));
 
 import { 
   authService, 
@@ -81,6 +85,18 @@ import { runWorkflowTest } from './services/workflowRunner';
 
 import { SEOHead } from './components/SEOHead';
 import { BottomNav } from './components/BottomNav';
+
+const ViewSkeleton = () => (
+  <div className="p-6 bg-white rounded-3xl border border-slate-200 shadow-sm animate-pulse space-y-4 my-2">
+    <div className="h-6 bg-slate-200 rounded-xl w-1/3"></div>
+    <div className="h-4 bg-slate-100 rounded-lg w-1/2"></div>
+    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
+      <div className="h-28 bg-slate-100 rounded-2xl"></div>
+      <div className="h-28 bg-slate-100 rounded-2xl"></div>
+      <div className="h-28 bg-slate-100 rounded-2xl"></div>
+    </div>
+  </div>
+);
 
 export default function App() {
   // State initialization
@@ -455,16 +471,16 @@ export default function App() {
           {/* Mobile Sidebar Backdrop Overlay */}
           {isMobileSidebarOpen && (
             <div
-              className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 md:hidden transition-opacity"
+              className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-30 lg:hidden transition-opacity"
               onClick={() => setIsMobileSidebarOpen(false)}
             />
           )}
 
           {/* Sidebar Drawer */}
-          <div className={`fixed inset-y-16 rtl:right-0 ltr:left-0 z-40 transform transition-transform duration-300 md:relative md:inset-auto md:translate-x-0 ${
+          <div className={`fixed inset-y-16 rtl:right-0 ltr:left-0 z-40 transform transition-transform duration-300 lg:relative lg:inset-auto lg:translate-x-0 ${
             isMobileSidebarOpen 
               ? 'translate-x-0' 
-              : language === 'ar' ? 'translate-x-full md:translate-x-0' : '-translate-x-full md:translate-x-0'
+              : language === 'ar' ? 'translate-x-full lg:translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}>
             <Sidebar
               activeTab={activeTab}
@@ -482,7 +498,7 @@ export default function App() {
           </div>
 
           {/* Tab View Container */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 lg:pb-8">
             {!isGuestMode && (
               <TrialUsageBanner
                 language={language}
@@ -495,6 +511,7 @@ export default function App() {
             )}
 
             <ErrorBoundary>
+            <Suspense fallback={<ViewSkeleton />}>
             {activeTab === 'dashboard' && (
               <DashboardView
                 language={language}
@@ -790,6 +807,7 @@ export default function App() {
                 user={user}
               />
             )}
+            </Suspense>
             </ErrorBoundary>
           </main>
 
@@ -823,13 +841,15 @@ export default function App() {
         onAuthSuccess={handleAuthSuccess}
       />
 
-      <AIGeneratorModal
-        isOpen={isAIGeneratorOpen}
-        onClose={() => setIsAIGeneratorOpen(false)}
-        language={language}
-        initialPrompt={aiPrompt}
-        onWorkflowGenerated={handleWorkflowGeneratedByAI}
-      />
+      <Suspense fallback={null}>
+        <AIGeneratorModal
+          isOpen={isAIGeneratorOpen}
+          onClose={() => setIsAIGeneratorOpen(false)}
+          language={language}
+          initialPrompt={aiPrompt}
+          onWorkflowGenerated={handleWorkflowGeneratedByAI}
+        />
+      </Suspense>
 
       <FeedbackModal
         isOpen={isFeedbackOpen}

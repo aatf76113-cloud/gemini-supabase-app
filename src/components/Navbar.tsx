@@ -67,7 +67,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         {onToggleSidebar && (
           <button 
             onClick={onToggleSidebar}
-            className="md:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+            className="lg:hidden p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
           >
             <Menu className="w-5 h-5" />
           </button>

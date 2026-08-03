@@ -278,8 +278,61 @@ export const ExecutionsLogView: React.FC<ExecutionsLogViewProps> = ({
             </div>
           </div>
 
-          {/* Executions Table */}
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
+          {/* Mobile Card View for Executions */}
+          <div className="block sm:hidden space-y-3">
+            {filteredLogs.map((exec) => (
+              <div
+                key={exec.id}
+                onClick={() => setSelectedExec(exec)}
+                className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex flex-col gap-2.5 active:bg-slate-50 transition-colors"
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-2 space-x-reverse min-w-0 pr-2">
+                    <Activity className="w-4 h-4 text-indigo-500 shrink-0" />
+                    <span className="font-extrabold text-xs text-slate-900 truncate">
+                      {language === 'ar' ? (exec.workflowNameAr || exec.workflowName) : exec.workflowName}
+                    </span>
+                  </div>
+
+                  <span className={`inline-flex items-center space-x-1 space-x-reverse px-2.5 py-0.5 rounded-full text-[10px] font-black shrink-0 ${
+                    exec.status === 'success' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'
+                  }`}>
+                    {exec.status === 'success' ? <CheckCircle2 className="w-3 h-3" /> : <AlertTriangle className="w-3 h-3" />}
+                    <span>{exec.status === 'success' ? t.logs.statusSuccess : t.logs.statusFailed}</span>
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-2 gap-2 text-[11px] text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100 font-mono">
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-sans">المشغل (Trigger):</span>
+                    <span className="truncate block font-bold text-slate-700">{exec.triggeredBy}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-sans">الزمن (Duration):</span>
+                    <span className="font-bold text-slate-700">{exec.durationMs}ms</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-1 text-[10px] text-slate-400">
+                  <span>{new Date(exec.executedAt).toLocaleString('ar-SA', { dateStyle: 'short', timeStyle: 'short' })}</span>
+                  
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRetryExecution(exec);
+                    }}
+                    className="px-3 py-1 bg-slate-100 hover:bg-indigo-600 hover:text-white text-slate-700 font-bold rounded-xl transition-all border border-slate-200 flex items-center gap-1"
+                  >
+                    <RotateCcw className="w-3 h-3" />
+                    <span>إعادة التشغيل</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Executions Table */}
+          <div className="hidden sm:block bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-right text-xs">
                 <thead className="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-extrabold text-[10px] tracking-wider">
