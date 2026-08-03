@@ -24,6 +24,21 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
+// Helper function to prune dynamic cache size
+const MAX_DYNAMIC_ITEMS = 50;
+async function trimCache(cacheName, maxItems) {
+  try {
+    const cache = await caches.open(cacheName);
+    const keys = await cache.keys();
+    if (keys.length > maxItems) {
+      await cache.delete(keys[0]);
+      await trimCache(cacheName, maxItems);
+    }
+  } catch (e) {
+    console.warn('[ServiceWorker] trimCache error:', e);
+  }
+}
+
 // Activate Event
 self.addEventListener('activate', (event) => {
   event.waitUntil(
@@ -36,7 +51,7 @@ self.addEventListener('activate', (event) => {
           }
         })
       );
-    }).catch((e) => {
+    }).then(() => trimCache(DYNAMIC_CACHE, MAX_DYNAMIC_ITEMS)).catch((e) => {
       console.warn('[ServiceWorker] Cache keys error:', e);
     })
   );

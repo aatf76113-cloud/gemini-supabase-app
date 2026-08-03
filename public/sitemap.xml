@@ -1,27 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemap.org/schemas/sitemap/0.9 http://www.sitemap.org/schemas/sitemap/0.9/sitemap.xsd">
   <url>
-    <loc>https://zainauto.io/</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://gemini-supabase-app-nine.vercel.app/</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://zainauto.io/pricing</loc>
-    <lastmod>2026-08-01</lastmod>
-    <changefreq>weekly</changefreq>
+    <loc>https://gemini-supabase-app-nine.vercel.app/workflows</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://zainauto.io/features</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://gemini-supabase-app-nine.vercel.app/agents</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/ai-builder</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://zainauto.io/status</loc>
-    <lastmod>2026-08-01</lastmod>
+    <loc>https://gemini-supabase-app-nine.vercel.app/connections</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/templates</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/pricing</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/status</loc>
+    <lastmod>2026-08-03</lastmod>
     <changefreq>always</changefreq>
     <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/logs</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/webhooks</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/developers</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://gemini-supabase-app-nine.vercel.app/help</loc>
+    <lastmod>2026-08-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

@@ -42,6 +42,16 @@ const rateLimiterMiddleware = (req: express.Request, res: express.Response, next
 
 app.use(rateLimiterMiddleware);
 
+// Security Headers Middleware
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "SAMEORIGIN");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  res.setHeader("Referrer-Policy", "strict-origin-when-cross-origin");
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  next();
+});
+
 // Active Gemini API key resolution directly in code
 const ACTIVE_GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || "AIzaSyDxul2HsPXCOX6naJE-WCZUhFYlNX_ALag";
 
@@ -714,6 +724,48 @@ app.get("/api/monitoring/telemetry", (req, res) => {
       environment: process.env.NODE_ENV || "development"
     }
   });
+});
+
+// Dynamic Sitemap Generator for SEO and Google Search Console
+app.get("/sitemap.xml", (req, res) => {
+  const host = req.get("host") || "gemini-supabase-app-nine.vercel.app";
+  const protocol = req.protocol === "https" || req.headers["x-forwarded-proto"] === "https" ? "https" : "http";
+  const baseUrl = `${protocol}://${host}`;
+  const nowISO = new Date().toISOString().split("T")[0];
+
+  const routes = [
+    { path: "", priority: "1.0", changefreq: "daily" },
+    { path: "workflows", priority: "0.9", changefreq: "daily" },
+    { path: "agents", priority: "0.9", changefreq: "daily" },
+    { path: "ai-builder", priority: "0.8", changefreq: "weekly" },
+    { path: "connections", priority: "0.8", changefreq: "weekly" },
+    { path: "templates", priority: "0.8", changefreq: "weekly" },
+    { path: "pricing", priority: "0.9", changefreq: "weekly" },
+    { path: "status", priority: "0.7", changefreq: "always" },
+    { path: "logs", priority: "0.7", changefreq: "daily" },
+    { path: "webhooks", priority: "0.6", changefreq: "monthly" },
+    { path: "developers", priority: "0.6", changefreq: "monthly" },
+    { path: "help", priority: "0.6", changefreq: "monthly" }
+  ];
+
+  const xmlUrls = routes
+    .map(
+      (r) => `  <url>
+    <loc>${baseUrl}/${r.path}</loc>
+    <lastmod>${nowISO}</lastmod>
+    <changefreq>${r.changefreq}</changefreq>
+    <priority>${r.priority}</priority>
+  </url>`
+    )
+    .join("\n");
+
+  const sitemapXml = `<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemap.org/schemas/sitemap/0.9">
+${xmlUrls}
+</urlset>`;
+
+  res.header("Content-Type", "application/xml");
+  res.send(sitemapXml);
 });
 
 // Setup Vite dev middleware or static serving

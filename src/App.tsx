@@ -79,6 +79,9 @@ import {
 } from './services/firebase';
 import { runWorkflowTest } from './services/workflowRunner';
 
+import { SEOHead } from './components/SEOHead';
+import { BottomNav } from './components/BottomNav';
+
 export default function App() {
   // State initialization
   const [user, setUser] = useState<UserProfile | null>(() => authService.getCurrentUser());
@@ -414,6 +417,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col font-sans antialiased selection:bg-indigo-500 selection:text-white">
+      <SEOHead activeTab={activeTab} language={language} workflowName={selectedWorkflow?.name} />
       {/* Top Navbar */}
       <Navbar
         user={user}
@@ -478,7 +482,7 @@ export default function App() {
           </div>
 
           {/* Tab View Container */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6">
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 space-y-6 pb-24 md:pb-8">
             {!isGuestMode && (
               <TrialUsageBanner
                 language={language}
@@ -788,6 +792,22 @@ export default function App() {
             )}
             </ErrorBoundary>
           </main>
+
+          {/* Mobile Bottom Navigation Bar */}
+          <BottomNav
+            activeTab={activeTab}
+            onTabChange={(tab) => {
+              setActiveTab(tab);
+              setIsMobileSidebarOpen(false);
+            }}
+            language={language}
+            onNewWorkflow={handleNewWorkflow}
+            onOpenAIGenerator={() => {
+              setAiPrompt('');
+              setIsAIGeneratorOpen(true);
+            }}
+            onToggleSidebar={() => setIsMobileSidebarOpen(!isMobileSidebarOpen)}
+          />
         </div>
       )}
 

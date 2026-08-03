@@ -1,7 +1,4 @@
 User-agent: *
 Allow: /
-Disallow: /admin/
-Disallow: /api/
-Disallow: /private/
 
-Sitemap: https://zainauto.io/sitemap.xml
+Sitemap: https://gemini-supabase-app-nine.vercel.app/sitemap.xml
